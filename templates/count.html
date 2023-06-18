@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>sit-up</title>
+    <link rel="stylesheet" href="../static/css/mystyle.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+      body {
+        background-color: aliceblue;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      .left {
+        float: left;
+        padding-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 45%;
+        /* The width is 20%, by default */
+      }
+
+      .main {
+        background-color: #f1f1f1;
+        padding: 20px;
+        float: left;
+        width: 60%;
+        /* The width is 60%, by default */
+      }
+
+      .right {
+        float: left;
+        width: 55%;
+        /* The width is 20%, by default */
+      }
+
+      /* Use a media query to add a break point at 800px: */
+      @media screen and (max-width: 800px) {
+
+        .left,
+        .main,
+        .right {
+          width: 100%;
+          /* The width is 100%, when the viewport is 800px or smaller */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <div class="left">
+        <h2 class="count_label"> Counting </h2>
+        <p class="count" id="counter"></p>
+        <form action="/camera" method="POST" class="toggle">
+          <label>Upload Video</label>
+          <label class="switch">
+            <input type="checkbox" id = 'camera' {% if cameraFlag %} checked {% endif %} onclick="toggle_func()">
+            <span class="slider round"></span>
+          </label>
+          <label>Turn On Camera</label>
+          <button type="submit" id="toggle" style="visibility: hidden;"></button>
+        </form>
+        {% if cameraFlag == False %}
+        <div class="buttons">
+          <form action="/upload" method="POST" enctype="multipart/form-data" id="btn_upload">
+            <input type="file" name = 'file'  class=""/>
+            <button type="submit" class="upload_btn" id ='btn_upload'>Upload</button>
+          </form>
+        </div>
+        {% endif %}
+        <div class="startbutton">
+          <form action="/play" method="POST">
+            <button type="submit" class="btn-hover color-1" style="float: left" id="play_btn" onclick="start_video()"> {{label}} </button>
+          </form>
+          
+        </div>
+      </div>
+      <div class="right">
+        <div class="video">
+          <img src="{{url}}" style="width: 800px;" id="image" />
+        </div>
+      </div>
+    </div>
+    <dv>
+      <div style="margin-left: 10px; padding-left: 1100px; padding-top: 500px;">
+          <div style="display: inline;">
+            <div>
+              <p class="part_counting_label">LEFT FOOT: </p>
+              <p class="part_counting_label" id="part_leftfoot_counter"></p>
+            </div>
+            <div>
+              <p class="part_counting_label">Right Foot: </p>
+              <p class="part_counting_label" id="part_rightfoot_counter"></p>
+            </div>
+            <div>
+              <p class="part_counting_label">Left Knee: </p>
+              <p class="part_counting_label" id ='part_leftknee_counter' ></p>
+            </div>
+            <div>
+              <p class="part_counting_label">Right Knee:</p>
+              <p class="part_counting_label" id ='part_rightknee_counter'></p>
+            </div>
+          </div>
+          <div style="display: inline;">
+            <div>
+              <p class="part_counting_label">Left Shoudler: </p>
+              <p class="part_counting_label" id = 'part_leftshoudler_counter'></p>
+            </div>
+            <div>
+              <p class="part_counting_label">Right Shoulder: </p>
+              <p class="part_counting_label" id="part_rightshoudler_counter"></p>
+            </div>
+            <div>
+              <p class="part_counting_label">Head: </p>
+              <p class="part_counting_label" id="part_head_counter"></p>
+            </div>
+          </div>
+        </div>
+    </dv>
+      <script>
+        function toggle_func(){
+        document.getElementById('toggle').click()
+      }
+
+      function getCount() {
+        $.getJSON('/count', function(data) {
+          $('#counter').text(data.count);
+          $('#part_leftfoot_counter').text(data.pose_count[0]);
+          $('#part_rightfoot_counter').text(data.pose_count[1]);
+          $('#part_leftknee_counter').text(data.pose_count[2]);
+          $('#part_rightknee_counter').text(data.pose_count[3]);
+          $('#part_leftshoudler_counter').text(data.pose_count[4]);
+          $('#part_rightshoudler_counter').text(data.pose_count[5]);
+          $('#part_head_counter').text(data.pose_count[6]);
+        })
+
+        setTimeout(() => {
+          getCount()
+        }, 1000)
+      }
+
+      window.onload = getCount
+      </script>
+  </body>
+</html>

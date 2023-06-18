@@ -1,0 +1,10 @@
+flask
+opencv-python
+threaded
+numpy
+flask_cors
+werkzeug
+ruamel.yaml
+ultralytics
+openvino
+mediapipe
