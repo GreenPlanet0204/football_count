@@ -189,20 +189,28 @@ def gen_frams():
                                 diff = []
 
                                 for i in range(7):
-                                    if(i == 2 or i == 3):
-                                        if( left_3d_knee_angle < 83 or right_3d_knee_angle < 83) and (y+ radius < max(pos_y[2], pos_y[3])):
-                                            if(left_3d_knee_angle < 83):
-                                                pose_count[2] += 1
-                                            elif(right_3d_knee_angle < 83):
-                                                pose_count[3] += 1
-                                        else:
-                                            if(diff[0]< diff[1]):
-                                                pose_count[0] += 1
+                                    dis = int((pre_y + radius - pos_y[i])*(pre_y +radius - pos_y[i]) + (pre_x - pos_x[i])*(pre_x - pos_x[i]))
+                                    diff.append(dis) 
+                                sort_diff = sorted(diff)
+                                for j in range(7):
+                                    if(sort_diff[0] == diff[j]):
+                                        index = j
+                                        if(j == 2 or j == 3):
+                                            if( left_3d_knee_angle < 83 or right_3d_knee_angle < 83) and (y+ radius < max(pos_y[2], pos_y[3])):
+                                                print(' errrrrorrrrrrrrrrrrr', y-radius, max(pos_y[2], pos_y[3]) )
+                                                print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+                                                if(left_3d_knee_angle < 83):
+                                                    pose_count[2] += 1
+                                                elif(right_3d_knee_angle < 83):
+                                                    pose_count[3] += 1
                                             else:
-                                                pose_count[1] += 1
-                                    else:
-                                        pose_count[i] += 1
-                                    break    
+                                                if(diff[0]< diff[1]):
+                                                    pose_count[0] += 1
+                                                else:
+                                                    pose_count[1] += 1
+                                        else:
+                                            pose_count[j] += 1
+                                        break   
                 
                 ret , buffer = cv2.imencode('.jpg',image)
                 frame = buffer.tobytes()    

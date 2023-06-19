@@ -1,4 +1,5 @@
 flask
+gunicorn
 opencv-python
 threaded
 numpy
