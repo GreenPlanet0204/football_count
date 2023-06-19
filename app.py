@@ -120,7 +120,7 @@ def gen_frams():
                 frame_number += 1
                 ret, frame = cap.read()
                 i+= 1
-                if i%2:
+                if i%3:
                     continue
                 if frame is not None:
                     frame_ = rescale_frame(frame, percent=100)
